@@ -1,0 +1,33 @@
+body { background: #f8f9fa; font-size: 14px; }
+    .table thead th {
+      background: #ffc107; color: #000;
+      text-align: center; vertical-align: middle;
+      border: 1px solid #000;
+    }
+    .table tbody td { text-align: center; border: 1px solid #000; }
+    .sub-total { background: #ffc107; font-weight: bold; }
+    /* Sidebar */
+    .sidebar {
+      height: 100vh;
+      background: #343a40;
+      padding-top: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200px;
+    }
+    .sidebar a {
+      display: block;
+      color: #fff;
+      padding: 12px 20px;
+      text-decoration: none;
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+    .sidebar a:hover {
+      background: #495057;
+    }
+    .content {
+      margin-left: 220px;
+      padding: 20px;
+    }
