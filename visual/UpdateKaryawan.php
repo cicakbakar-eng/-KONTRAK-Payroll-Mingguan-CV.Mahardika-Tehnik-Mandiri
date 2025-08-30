@@ -42,6 +42,7 @@ if (isset($_POST['delete'])) {
 <html>
 <head>
     <title>Edit & Hapus Karyawan</title>
+    <link rel="icon" type="image/x-icon" href="../resource/SiReGaR.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container mt-4">

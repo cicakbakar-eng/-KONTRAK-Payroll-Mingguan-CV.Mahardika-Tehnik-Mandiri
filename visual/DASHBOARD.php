@@ -5,7 +5,7 @@ include '../functionPHP/connect.php';
 $tanggal_awal = $_POST['tanggal_awal'] ?? date('Y-m-d', strtotime('monday this week'));
 $tanggal_akhir = date('Y-m-d', strtotime($tanggal_awal . ' +6 days'));
 
-// Buat range tanggal
+// Tampil Periode Tanggal
 $periode = new DatePeriod(
     new DateTime($tanggal_awal),
     new DateInterval('P1D'),
@@ -14,7 +14,7 @@ $periode = new DatePeriod(
 
 $periodeArr = iterator_to_array($periode); // simpan ke array agar bisa dipakai ulang
 
-// Ambil semua data karyawan
+// select data karyawan
 $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -23,6 +23,7 @@ $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payroll Mingguan</title>
+  <link rel="icon" type="image/x-icon" href="../resource/SiReGaR.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body { background: #f8f9fa; font-size: 14px; }
@@ -45,11 +46,10 @@ $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")-
   </div>
   <a href="TambahKaryawan.php">Tambah Karyawan</a>
   <a href="UpdateKaryawan.php">Data Manajemen Karyawan</a>
-  <a href="UpdateKaryawan.php">Data Manajemen Karyawan</a>
-  <a href="UpdateKaryawan.php">Data Manajemen Karyawan</a>
-  <a href="UpdateKaryawan.php">Data Manajemen Karyawan</a>
-  <a href="UpdateKaryawan.php">Data Manajemen Karyawan</a>
-  <a href="UpdateKaryawan.php">Data Manajemen Karyawan</a>
+  <a href="UpdateKaryawan.php">Absensi YASIR</a>
+  <a href="UpdateKaryawan.php">Detail Gaji & Potongan Karyawan</a>
+  <a href="UpdateKaryawan.php">Data KASBON Karyawan</a>
+  <a href="UpdateKaryawan.php">Slip Gaji Karyawan</a>
 </div>
 
 <div class="content">
