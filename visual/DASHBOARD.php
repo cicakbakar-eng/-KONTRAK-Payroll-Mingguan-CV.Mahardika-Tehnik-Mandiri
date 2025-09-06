@@ -12,9 +12,9 @@ $periode = new DatePeriod(
     (new DateTime($tanggal_akhir))->modify('+1 day')
 );
 
-$periodeArr = iterator_to_array($periode); // simpan ke array agar bisa dipakai ulang
+$periodeArr = iterator_to_array($periode);
 
-// select data karyawan
+// Ambil data karyawan
 $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -87,9 +87,7 @@ $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")-
         </tr>
       </thead>
       <tbody>
-        <?php 
-        $no=1; 
-        foreach ($karyawan as $k): ?>
+        <?php $no=1; foreach ($karyawan as $k): ?>
           <tr>
             <td><?= $no++ ?></td>
             <td><?= $k['nama'] ?></td>
@@ -101,20 +99,12 @@ $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")-
               $lembur = $cek['lembur'] ?? 0;
             ?>
               <td>
-                <input type="number" 
-                       value="<?= $kerja ?>" 
-                       class="absensi-input"
-                       data-karyawan="<?= $k['id'] ?>"
-                       data-tanggal="<?= $date ?>"
-                       data-field="kerja">
+                <input type="number" value="<?= $kerja ?>" class="absensi-input"
+                       data-karyawan="<?= $k['id'] ?>" data-tanggal="<?= $date ?>" data-field="kerja">
               </td>
               <td>
-                <input type="number" 
-                       value="<?= $lembur ?>" 
-                       class="absensi-input"
-                       data-karyawan="<?= $k['id'] ?>"
-                       data-tanggal="<?= $date ?>"
-                       data-field="lembur">
+                <input type="number" value="<?= $lembur ?>" class="absensi-input"
+                       data-karyawan="<?= $k['id'] ?>" data-tanggal="<?= $date ?>" data-field="lembur">
               </td>
             <?php endforeach; ?>
           </tr>
@@ -145,9 +135,7 @@ $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")-
             <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir" value="<?= $tanggal_akhir ?>" required>
           </div>
           <div class="col-md-4">
-            <button class="btn btn-success w-100" type="submit">
-              Export Excel
-            </button>
+            <button class="btn btn-success w-100" type="submit">Export Excel</button>
           </div>
         </form>
       </div>
@@ -155,58 +143,94 @@ $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")-
   </div>
 </div>
 
-<!-- jQuery + Ajax -->
+<!-- Modal Login -->
+<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Login Admin</h5>
+      </div>
+      <div class="modal-body">
+        <div id="login-error" class="alert alert-danger d-none"></div>
+        <form id="loginForm">
+          <div class="mb-3">
+            <label>Username</label>
+            <input type="text" name="username" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 $(document).on("change", ".absensi-input", function() {
-  let karyawan_id = $(this).data("karyawan");
-  let tanggal = $(this).data("tanggal");
-  let field = $(this).data("field");
-  let value = parseFloat($(this).val()) || 0;
+  let data = {
+    karyawan_id: $(this).data("karyawan"),
+    tanggal: $(this).data("tanggal"),
+    field: $(this).data("field"),
+    value: parseFloat($(this).val()) || 0
+  };
 
-  $.post("UpdateAbsensi.php", {
-    karyawan_id: karyawan_id,
-    tanggal: tanggal,
-    field: field,
-    value: value
-  }, function(res){
+  $.post("UpdateAbsensi.php", data, function(res){
     console.log("Update sukses:", res);
   });
 
-  // hitung ulang subtotal setelah update
   hitungSubtotal();
 });
 
 function hitungSubtotal() {
-  let subtotalKerja = {};
-  let subtotalLembur = {};
+  let subtotalKerja = {}, subtotalLembur = {};
 
   $(".absensi-input").each(function() {
-    let tanggal = $(this).data("tanggal");
-    let field   = $(this).data("field");
-    let value   = parseFloat($(this).val()) || 0;
+    let tgl = $(this).data("tanggal");
+    let field = $(this).data("field");
+    let val = parseFloat($(this).val()) || 0;
 
     if (field === "kerja") {
-      subtotalKerja[tanggal] = (subtotalKerja[tanggal] || 0) + value;
+      subtotalKerja[tgl] = (subtotalKerja[tgl] || 0) + val;
     } else {
-      subtotalLembur[tanggal] = (subtotalLembur[tanggal] || 0) + value;
+      subtotalLembur[tgl] = (subtotalLembur[tgl] || 0) + val;
     }
   });
 
   $(".subtotal-kerja").each(function() {
-    let tanggal = $(this).data("tanggal");
-    $(this).text(subtotalKerja[tanggal] || 0);
+    let tgl = $(this).data("tanggal");
+    $(this).text(subtotalKerja[tgl] || 0);
   });
 
   $(".subtotal-lembur").each(function() {
-    let tanggal = $(this).data("tanggal");
-    $(this).text(subtotalLembur[tanggal] || 0);
+    let tgl = $(this).data("tanggal");
+    $(this).text(subtotalLembur[tgl] || 0);
   });
 }
 
-// jalankan sekali saat load
 $(document).ready(function(){
   hitungSubtotal();
+  $("#loginModal").modal("show");
+
+  const adminUser = "ADMINMAHARDIKA";
+  const adminPass = "mahardikaTehnikmandiri";
+
+  $("#loginForm").on("submit", function(e) {
+    e.preventDefault();
+    let user = $("input[name='username']").val();
+    let pass = $("input[name='password']").val();
+
+    if (user === adminUser && pass === adminPass) {
+      $("#loginModal").modal("hide");
+    } else {
+      $("#login-error").removeClass("d-none").text("Username atau Password salah!");
+    }
+  });
 });
 </script>
 </body>
