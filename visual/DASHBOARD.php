@@ -50,6 +50,8 @@ $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")-
   <a href="UpdateKaryawan.php">Detail Gaji & Potongan Karyawan</a>
   <a href="UpdateKaryawan.php">Data KASBON Karyawan</a>
   <a href="UpdateKaryawan.php">Slip Gaji Karyawan</a>
+  <a href="DASHBOARD.php">Dashboard Admin</a>
+  <a href="#" id="logoutLink" class="text-danger">Logout</a>
 </div>
 
 <div class="content">
@@ -120,6 +122,8 @@ $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")-
         </tr>
       </tbody>
     </table>
+
+
 
     <!-- Export Button -->
     <div class="card shadow-sm border-0 mb-4">
@@ -213,25 +217,38 @@ function hitungSubtotal() {
   });
 }
 
-$(document).ready(function(){
-  hitungSubtotal();
-  $("#loginModal").modal("show");
+$(document).ready(function() {
+  // Cek apakah sudah pernah login
+  if (localStorage.getItem("isLoggedIn") === "true") {
+    $("#loginModal").modal("hide");
+  } else {
+    $("#loginModal").modal("show");
+  }
 
   const adminUser = "ADMINMAHARDIKA";
   const adminPass = "mahardikaTehnikmandiri";
 
   $("#loginForm").on("submit", function(e) {
     e.preventDefault();
-    let user = $("input[name='username']").val();
-    let pass = $("input[name='password']").val();
+
+    let user = $(this).find("input[name='username']").val();
+    let pass = $(this).find("input[name='password']").val();
 
     if (user === adminUser && pass === adminPass) {
+      // simpan status login
+      localStorage.setItem("isLoggedIn", "true");
       $("#loginModal").modal("hide");
     } else {
       $("#login-error").removeClass("d-none").text("Username atau Password salah!");
     }
   });
 });
+$("#logoutLink").on("click", function(e) {
+  e.preventDefault(); // biar nggak reload halaman otomatis
+  localStorage.removeItem("isLoggedIn"); // hapus status login
+  $("#loginModal").modal("show"); // munculin modal login lagi
+});
+
 </script>
 </body>
 </html>
