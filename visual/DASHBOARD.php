@@ -44,13 +44,13 @@ $karyawan = $db->query("SELECT * FROM data_karyawan ORDER BY area_kerja, nama")-
     <img src="../resource/SiReGaR.png" alt="Logo" style="width:100px; border-radius:10px;">
     <h5 class="text-white mt-2">CV.MAHARDIKA TEKNIK MANDIRI</h5>
   </div>
+  <a href="DASHBOARD.php">Dashboard Admin</a>
   <a href="TambahKaryawan.php">Tambah Karyawan</a>
   <a href="UpdateKaryawan.php">Data Manajemen Karyawan</a>
   <a href="UpdateKaryawan.php">Absensi YASIR</a>
   <a href="UpdateKaryawan.php">Detail Gaji & Potongan Karyawan</a>
   <a href="UpdateKaryawan.php">Data KASBON Karyawan</a>
-  <a href="UpdateKaryawan.php">Slip Gaji Karyawan</a>
-  <a href="DASHBOARD.php">Dashboard Admin</a>
+  <a href="slipGAJI.php">Slip Gaji Karyawan</a>
   <a href="#" id="logoutLink" class="text-danger">Logout</a>
 </div>
 
@@ -244,9 +244,9 @@ $(document).ready(function() {
   });
 });
 $("#logoutLink").on("click", function(e) {
-  e.preventDefault(); // biar nggak reload halaman otomatis
-  localStorage.removeItem("isLoggedIn"); // hapus status login
-  $("#loginModal").modal("show"); // munculin modal login lagi
+  e.preventDefault(); // tolak anu refresh halaman
+  localStorage.removeItem("isLoggedIn"); 
+  $("#loginModal").modal("show"); 
 });
 
 </script>
